@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://d3js.org/d3.v3.min.js" charset="utf-8"> </script>
+
+<script>
+ function get_cir(x,y,r)
+ { this.x = x; 
+   this.y = y; 
+   this.r = r;
+   return this;
+ }
+ function shrink()
+ {
+    d3.select(this)
+      .transition()            
+        .delay(0)            
+        .duration(500)
+        .attr("r", 0);
+ }
+function mouse()
+ {
+    d3.select(this)
+          .on("mousedown", shrink)
+          .on("mouseover", function(){d3.select(this).style("fill", "white");})
+          .on("mouseout", function(){d3.select(this).transition().duration(1000).style("fill", "black");});
+
+         
+ }
+ window.onload = function(){
+ var body  =d3.select('body');
+
+body.append('div').attr('id','img');
+
+
+ var svg =   body.select('#img').append('svg')
+             .attr('width','100%')
+             .attr('height','100%');
+
+ var arr = [];
+ for(i=1,t=21; i<t; i++)
+ {
+  for(j=1;j<t;j++)
+  {
+  var x,y,r ,d;
+  x = i*1.0;
+  y = j*1.0;
+  r = 10.0;
+  arr.push(new get_cir(x,y,r));
+  }
+ }
+ var enter = svg.selectAll('circle').data(arr).enter();
+ enter.append('circle').attr('cx',function(d){ return d.x*20} )
+                       .attr('cy',function(d){ return d.y*20} )
+                       .attr('r',function(d){ return 0} )
+                       .attr('fill','black')
+                       .transition()
+                       .delay(function(d,i){return i*10;})
+                       .duration(1000)
+                       .attr('r',function(d){ return d.r}) 
+                       .each('end',mouse);   
+
+ console.log(enter);
+
+ }
+</script>
+
+
+<style>
+
+circle {
+  fill-opacity:  0.5; 
+  stroke: gray;
+}
+</style>
+
+</head>
+<body>
+</body>
+</html>
